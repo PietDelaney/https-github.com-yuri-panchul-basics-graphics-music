@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -45,7 +45,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
         localparam w_key_top   = w_key_tm   > w_key   ? w_key_tm   : w_key,
                 w_led_top   = w_led_tm   > w_led   ? w_led_tm   : w_led,
                 w_digit_top = w_digit_tm > w_digit ? w_digit_tm : w_digit;
@@ -67,17 +67,17 @@ module board_specific_top
 
     //------------------------------------------------------------------------------
 
-    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+    `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
         assign key_top = {key_tm, key};
         assign {led_tm, led} = led_top;
         assign {digit_tm, digit} = digit_top;
 
-    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
         assign key_top = {key, key_tm};
         assign {led, led_tm} = led_top;
         assign {digit, digit_tm} = digit_top;
 
-    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `else  // DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
         always_comb
         begin
             key_top = '0;
@@ -100,7 +100,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz  (clk_mhz),
         .w_key    (w_key_top),
@@ -109,7 +109,7 @@ module board_specific_top
         .w_digit  (w_digit_top),
         .w_gpio   (w_gpio)
     )
-    i_top
+    i_lab_top
     (
         .clk      (clk),
         .slow_clk (slow_clk),

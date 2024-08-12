@@ -1,8 +1,8 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 `define USE_HDMI
-`undef  ENABLE_TM1638
+`undef  INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module board_specific_top
 # (
@@ -44,24 +44,24 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        localparam w_top_key   = w_tm_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_tm_led,
-                   w_top_digit = w_tm_digit;
+        localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
 
     `else                   // TM1638 module is not connected
 
-        localparam w_top_key   = w_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_led,
-                   w_top_digit = w_digit;
+        localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_led,
+                   w_lab_digit = w_digit;
 
     `endif
 
     //------------------------------------------------------------------------
- 
+
     wire                      clk_hdl;
     wire                      clk_hd;
     wire                      clk_px;
@@ -81,9 +81,9 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] lab_key;
+    wire  [w_lab_led   - 1:0] lab_led;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
@@ -103,17 +103,17 @@ module board_specific_top
    //------------------------------------------------------------------------
 
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
       `ifdef USE_HDMI
         assign rst      = ~ ( ~tm_key[w_tm_key - 1] & pll_lock );
       `else
         assign rst      = tm_key [w_tm_key - 1];
       `endif
-        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign lab_key  = tm_key [w_tm_key - 1:0];
 
-        assign tm_led   = top_led;
-        assign tm_digit = top_digit;
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
 
     `else                   // TM1638 module is not connected
 
@@ -122,9 +122,9 @@ module board_specific_top
       `else
         assign rst      = ~KEY[w_key - 1];
       `endif
-        assign top_key  = ~ KEY [w_key - 1:0];
+        assign lab_key  = ~ KEY [w_key - 1:0];
 
-        assign LED      = ~ top_led;
+        assign LED      = ~ lab_led;
 
     `endif
 
@@ -138,17 +138,17 @@ module board_specific_top
     //------------------------------------------------------------------------
 
 
-    top
+    lab_top
     # (
 `ifdef USE_HDMI
         .clk_mhz ( vid_clk_mhz ),
 `else
         .clk_mhz ( clk_mhz     ),
 `endif
-        .w_key   ( w_top_key     ),  // The last key is used for a reset
-        .w_sw    ( w_top_sw      ),
-        .w_led   ( w_top_led     ),
-        .w_digit ( w_top_digit   ),
+        .w_key   ( w_lab_key     ),  // The last key is used for a reset
+        .w_sw    ( w_lab_sw      ),
+        .w_led   ( w_lab_led     ),
+        .w_digit ( w_lab_digit   ),
         .w_gpio  ( w_gpio        )
 `ifdef USE_HDMI
         ,
@@ -157,7 +157,7 @@ module board_specific_top
         .w_blue  ( 8             )
 `endif
     )
-    i_top
+    i_lab_top
     (
 `ifdef USE_HDMI
         .clk        ( clk_hd     ),
@@ -167,13 +167,13 @@ module board_specific_top
         .slow_clk   ( slow_clk   ),
         .rst        ( rst        ),
 
-        .key        ( top_key    ),
+        .key        ( lab_key    ),
         .sw         (            ),
 
-        .led        ( top_led    ),
+        .led        ( lab_led    ),
 
         .abcdefgh   ( abcdefgh   ),
-        .digit      ( top_digit  ),
+        .digit      ( lab_digit  ),
 
         .vsync      ( vsync      ),
         .hsync      ( hsync      ),
@@ -228,7 +228,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver 
+    inmp441_mic_i2s_receiver
     # (
         .clk_mhz ( clk_mhz )
     )

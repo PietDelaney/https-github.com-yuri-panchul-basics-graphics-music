@@ -1,22 +1,28 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
-// `undef ENABLE_TM1638
+// `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module board_specific_top
 # (
-    parameter clk_mhz   = 27,
-              pixel_mhz = 9,
+    parameter clk_mhz       = 27,
+              pixel_mhz     = 9,
 
-              w_key     = 2,  // The last key is used for a reset
-              w_sw      = 0,
-              w_led     = 6,
-              w_digit   = 0,
-              w_gpio    = 10,
+              w_key         = 2,  // The last key is used for a reset
+              w_sw          = 0,
+              w_led         = 6,
+              w_digit       = 0,
+              w_gpio        = 10,
 
-              w_red     = 5,
-              w_green   = 6,
-              w_blue    = 5
+              screen_width  = 480,
+              screen_height = 272,
+
+              w_red         = 5,
+              w_green       = 6,
+              w_blue        = 5,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                        CLK,
@@ -83,19 +89,19 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        localparam w_top_key   = w_tm_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_tm_led,
-                   w_top_digit = w_tm_digit;
+        localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
 
     `else                   // TM1638 module is not connected
 
-        localparam w_top_key   = w_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_led,
-                   w_top_digit = w_digit;
+        localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_led,
+                   w_lab_digit = w_digit;
 
     `endif
 
@@ -105,34 +111,38 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] lab_key;
+    wire  [w_lab_led   - 1:0] lab_led;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
+
+    wire  [w_x         - 1:0] x;
+    wire  [w_y         - 1:0] y;
+
     wire  [             23:0] mic;
     wire  [             15:0] sound;
 
     //------------------------------------------------------------------------
 
 
-    `ifdef ENABLE_TM1638  // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         assign rst      = tm_key [w_tm_key - 1];
-        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign lab_key  = tm_key [w_tm_key - 1:0];
 
-        assign tm_led   = top_led;
-        assign tm_digit = top_digit;
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
 
-        assign LED      = w_led' (~ top_led);
+        assign LED      = w_led' (~ lab_led);
 
     `else                 // TM1638 module is not connected
 
         assign rst      = ~ KEY [w_key - 1];
-        assign top_key  = ~ KEY [w_key - 1:0];
+        assign lab_key  = ~ KEY [w_key - 1:0];
 
-        assign LED      = ~ top_led;
+        assign LED      = ~ lab_led;
 
     `endif
 
@@ -145,58 +155,55 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
-        .clk_mhz    ( clk_mhz      ),
-        .pixel_mhz  ( pixel_mhz    ),
+        .clk_mhz       ( clk_mhz       ),
 
-        .w_key      ( w_top_key    ),  // The last key is used for a reset
-        .w_sw       ( w_top_key    ),
-        .w_led      ( w_top_led    ),
-        .w_digit    ( w_top_digit  ),
-        .w_gpio     ( w_gpio       ),
+        .w_key         ( w_lab_key     ),  // The last key is used for a reset
+        .w_sw          ( w_lab_key     ),
+        .w_led         ( w_lab_led     ),
+        .w_digit       ( w_lab_digit   ),
+        .w_gpio        ( w_gpio        ),
 
-        .w_red      ( w_red        ),
-        .w_green    ( w_green      ),
-        .w_blue     ( w_blue       )
+        .screen_width  ( screen_width  ),
+        .screen_height ( screen_height ),
+
+        .w_red         ( w_red         ),
+        .w_green       ( w_green       ),
+        .w_blue        ( w_blue        )
     )
-    i_top
+    i_lab_top
     (
-        .clk        ( clk          ),
-        .slow_clk   ( slow_clk     ),
-        .rst        ( rst          ),
+        .clk           ( clk           ),
+        .slow_clk      ( slow_clk      ),
+        .rst           ( rst           ),
 
-        .key        ( top_key      ),
-        .sw         ( top_key      ),
+        .key           ( lab_key       ),
+        .sw            ( lab_key       ),
 
-        .led        ( top_led      ),
+        .led           ( lab_led       ),
 
-        .abcdefgh   ( abcdefgh     ),
-        .digit      ( top_digit    ),
+        .abcdefgh      ( abcdefgh      ),
+        .digit         ( lab_digit     ),
 
-        .vsync      ( LARGE_LCD_VS ),
-        .hsync      ( LARGE_LCD_HS ),
+        .x             ( x             ),
+        .y             ( y             ),
 
-        .red        ( LARGE_LCD_R  ),
-        .green      ( LARGE_LCD_G  ),
-        .blue       ( LARGE_LCD_B  ),
+        .red           ( LARGE_LCD_R   ),
+        .green         ( LARGE_LCD_G   ),
+        .blue          ( LARGE_LCD_B   ),
 
-        .display_on ( LARGE_LCD_DE ),
-        .pixel_clk  ( LARGE_LCD_CK ),
+        .uart_rx       ( UART_RX       ),
+        .uart_tx       ( UART_TX       ),
 
-        .uart_rx    ( UART_RX      ),
-        .uart_tx    ( UART_TX      ),
-
-        .mic        ( mic          ),
-        .sound      ( sound        ),
-        .gpio       ( gpio         )
+        .mic           ( mic           ),
+        .sound         ( sound         ),
+        .gpio          ( gpio          )
     );
-
-    assign LARGE_LCD_INIT = 1'b0;
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
     wire [$left (abcdefgh):0] hgfedcba;
 
@@ -213,7 +220,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
     tm1638_board_controller
     # (
@@ -237,33 +244,69 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk      ( clk            ),
-        .rst      ( rst            ),
-        .lr       ( TF_CS          ),
-        .ws       ( TF_MOSI        ),
-        .sck      ( TF_SCLK        ),
-        .sd       ( TF_MISO        ),
-        .value    ( mic            )
-    );
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz      ),
+            .PIXEL_MHZ   ( pixel_mhz    )
+        )
+        i_vga
+        (
+            .clk         ( clk          ),
+            .rst         ( rst          ),
+            .hsync       ( LARGE_LCD_HS ),
+            .vsync       ( LARGE_LCD_VS ),
+            .display_on  ( LARGE_LCD_DE ),
+            .hpos        ( x10          ),
+            .vpos        ( y10          ),
+            .pixel_clk   ( LARGE_LCD_CK )
+        );
+
+        assign LARGE_LCD_INIT = 1'b0;
+        assign LARGE_LCD_BL   = 1'b0;
+
+    `endif
 
     //------------------------------------------------------------------------
 
-    i2s_audio_out
-    # (
-        .clk_mhz  ( clk_mhz        )
-    )
-    o_audio
-    (
-        .clk      ( clk            ),
-        .reset    ( rst            ),
-        .data_in  ( sound          ),
-        .mclk     ( SMALL_LCD_DATA ),
-        .bclk     ( SMALL_LCD_CLK  ),
-        .lrclk    ( SMALL_LCD_RS   ),
-        .sdata    ( SMALL_LCD_CS   )
-    );
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        inmp441_mic_i2s_receiver i_microphone
+        (
+            .clk      ( clk            ),
+            .rst      ( rst            ),
+            .lr       ( TF_CS          ),
+            .ws       ( TF_MOSI        ),
+            .sck      ( TF_SCLK        ),
+            .sd       ( TF_MISO        ),
+            .value    ( mic            )
+        );
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz  ( clk_mhz        )
+        )
+        inst_audio_out
+        (
+            .clk      ( clk            ),
+            .reset    ( rst            ),
+            .data_in  ( sound          ),
+            .mclk     ( SMALL_LCD_DATA ),
+            .bclk     ( SMALL_LCD_CLK  ),
+            .lrclk    ( SMALL_LCD_RS   ),
+            .sdata    ( SMALL_LCD_CS   )
+        );
+
+    `endif
 
 endmodule
