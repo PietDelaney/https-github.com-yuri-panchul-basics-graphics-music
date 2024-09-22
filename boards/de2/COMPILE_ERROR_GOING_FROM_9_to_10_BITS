@@ -1,0 +1,97 @@
+verilog@verilog-X555LAB:~/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola$ ./03_synthesize_for_fpga.bash
+03_synthesize_for_fpga.bash: Found Quartus in one of the standard locations:
+QUARTUS_ROOTDIR=/home/verilog/altera/13.0sp1/quartus
+PATH=/home/verilog/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/verilog/altera/13.0sp1/quartus/bin
+quartus_full_real_path=/home/verilog/altera/13.0sp1/quartus/bin/quartus
+Info: *******************************************************************
+Info: Running Quartus II 32-bit Shell
+Info: Command: quartus_sh --no_banner --flow compile fpga_project
+Info: Quartus(args): compile fpga_project
+Info: Project Name = /home/verilog/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola/run/fpga_project
+Info: Revision Name = fpga_project
+Info: *******************************************************************
+Info: Running Quartus II 32-bit Analysis & Synthesis
+    Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
+    Info: Processing started: Sun Sep 22 14:31:41 2024
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off fpga_project -c fpga_project
+Warning (20028): Parallel compilation is not licensed and has been disabled
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola/lab_top.sv
+    Info (12023): Found entity 1: lab_top
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/boards/de2/board_specific_top.sv
+    Info (12023): Found entity 1: board_specific_top
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/lcd_480_272.sv
+    Info (12023): Found entity 1: lcd_480_272
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/digilent_pmod_mic3_spi_receiver.sv
+    Info (12023): Found entity 1: digilent_pmod_mic3_spi_receiver
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/lcd_800_480.sv
+    Info (12023): Found entity 1: lcd_800_480
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/slow_clk_gen.sv
+    Info (12023): Found entity 1: slow_clk_gen
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/vga.sv
+    Info (12023): Found entity 1: vga
+Info (12021): Found 2 design units, including 2 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/tm1638_board.sv
+    Info (12023): Found entity 1: tm1638_board_controller
+    Info (12023): Found entity 2: tm1638_sio
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/lcd_480_272_ml6485.sv
+    Info (12023): Found entity 1: lcd_480_272_ml6485
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/imitate_reset_on_power_up.sv
+    Info (12023): Found entity 1: imitate_reset_on_power_up
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/tm1638_switch.sv
+    Info (12023): Found entity 1: tm1638_switch
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/inmp441_mic_i2s_receiver.sv
+    Info (12023): Found entity 1: inmp441_mic_i2s_receiver
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/peripherals/i2s_audio_out.sv
+    Info (12023): Found entity 1: i2s_audio_out
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/labs/common/strobe_gen.sv
+    Info (12023): Found entity 1: strobe_gen
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/labs/common/shift_reg.sv
+    Info (12023): Found entity 1: shift_reg
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/labs/common/seven_segment_display.sv
+    Info (12023): Found entity 1: seven_segment_display
+Info (12021): Found 1 design units, including 1 entities, in source file /home/verilog/projects/basics-graphics-music.piet/labs/common/counter_with_enable.sv
+    Info (12023): Found entity 1: counter_with_enable
+Info (12127): Elaborating entity "board_specific_top" for the top level hierarchy
+Warning (10036): Verilog HDL or VHDL warning at board_specific_top.sv(199): object "dp" assigned a value but never read
+Warning (10240): Verilog HDL Always Construct warning at board_specific_top.sv(246): inferring latch(es) for variable "LEDR", which holds its previous value in one or more paths through the always construct
+Warning (10230): Verilog HDL assignment warning at board_specific_top.sv(285): truncated value with size 10 to match size of target (9)
+Info (10041): Inferred latch for "LEDR[0]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[1]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[2]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[3]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[4]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[5]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[6]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[7]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[8]" at board_specific_top.sv(246)
+Info (10041): Inferred latch for "LEDR[9]" at board_specific_top.sv(246)
+Info (12128): Elaborating entity "slow_clk_gen" for hierarchy "slow_clk_gen:i_slow_clk_gen"
+Info (12128): Elaborating entity "lab_top" for hierarchy "lab_top:i_lab_top"
+Error (10232): Verilog HDL error at lab_top.sv(102): index -1 cannot fall outside the declared range [8:0] for vector "y" File: /home/verilog/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola/lab_top.sv Line: 102
+Error (12152): Can't elaborate user hierarchy "lab_top:i_lab_top" File: /home/verilog/projects/basics-graphics-music.piet/boards/de2/board_specific_top.sv Line: 149
+Info (144001): Generated suppressed messages file /home/verilog/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola/run/fpga_project.map.smsg
+Error: Quartus II 32-bit Analysis & Synthesis was unsuccessful. 2 errors, 4 warnings
+    Error: Peak virtual memory: 343 megabytes
+    Error: Processing ended: Sun Sep 22 14:31:42 2024
+    Error: Elapsed time: 00:00:01
+    Error: Total CPU time (on all processors): 00:00:01
+Error (293001): Quartus II Full Compilation was unsuccessful. 4 errors, 4 warnings
+Error: Flow compile (for project /home/verilog/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola/run/fpga_project) was not successful
+Error: ERROR: Error(s) found while running an executable. See report file(s) for error message(s). Message log indicates which executable was run last.
+
+Error (10232): Verilog HDL error at lab_top.sv(102): index -1 cannot fall outside the declared range [8:0] for vector "y" File: /home/verilog/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola/lab_top.sv Line: 102
+Error (12152): Can't elaborate user hierarchy "lab_top:i_lab_top" File: /home/verilog/projects/basics-graphics-music.piet/boards/de2/board_specific_top.sv Line: 149
+Info (144001): Generated suppressed messages file /home/verilog/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola/run/fpga_project.map.smsg
+Error: Quartus II 32-bit Analysis & Synthesis was unsuccessful. 2 errors, 4 warnings
+    Error: Peak virtual memory: 343 megabytes
+    Error: Processing ended: Sun Sep 22 14:31:42 2024
+    Error: Elapsed time: 00:00:01
+    Error: Total CPU time (on all processors): 00:00:01
+Error (293001): Quartus II Full Compilation was unsuccessful. 4 errors, 4 warnings
+Error: Flow compile (for project /home/verilog/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola/run/fpga_project) was not successful
+Error: ERROR: Error(s) found while running an executable. See report file(s) for error message(s). Message log indicates which executable was run last.
+
+
+03_synthesize_for_fpga.bash: error: synthesis failed
+Press any key qverilog@verilog-X555LAB:~/projects/basics-graphics-music.piet/labs/2_graphics/2_1_rectangle_ellipse_parabola$ 
+:wq
+
