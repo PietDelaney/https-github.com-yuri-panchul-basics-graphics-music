@@ -20,7 +20,7 @@ module board_specific_top
 
               w_red         = 9,	// de2_115 is only 8 bits wide
               w_green       = 9,	// Get compile error with vector 'x' with 10 bits
-              w_blue        = 9,	// 10 bit breaks verlog compiler
+              w_blue        = 10,	// 10 bit breaks verlog compiler
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
