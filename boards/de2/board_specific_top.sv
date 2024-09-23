@@ -22,9 +22,14 @@ module board_specific_top
               w_green       = 9,	// Get compile error with vector 'x' with 10 bits
               w_blue        = 9,	// 10 bit breaks verlog compiler
 
-              w_x           = $clog2 ( screen_width  ),
-              w_y           = $clog2 ( screen_height )
+	      // WORKAROUND FOR Parabala parabola code:
+              // w_x           = $clog2 ( screen_width  ),
+              w_x           = 9 ,
+	      // w_y           = $clog2 ( screen_height )
+	      w_y           = 9
 )
+
+
 (
     input                   CLOCK_50,
 
@@ -48,8 +53,8 @@ module board_specific_top
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
     output [w_blue   - 1:0] VGA_B,
-    output                  VGA_BLANK_N,
-    output                  VGA_SYNC_N,
+    output                  VGA_BLANK,
+    output                  VGA_SYNC,
 
     input                   UART_RXD,
     output                  UART_TXD,
@@ -301,8 +306,8 @@ module board_specific_top
             .pixel_clk   ( VGA_CLK   )
         );
 
-        assign VGA_BLANK_N = 1'b1;
-        assign VGA_SYNC_N  = 1'b0;
+        assign VGA_BLANK = 1'b1;
+        assign VGA_SYNC  = 1'b0;
 
     `endif
 
