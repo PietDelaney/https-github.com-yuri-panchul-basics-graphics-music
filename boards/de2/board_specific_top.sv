@@ -158,46 +158,6 @@ module board_specific_top
     //assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_led; // Last 8 LEDR are used like a 7SEG dp HACK?
     // assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_lab_led; // Last 8 LEDR are used like a 7SEG dp HACK?
     //
-`define DOESNT_COMPILE 					// Doesn't change compile or display bug
-							// "vga_red_4b" is not declared File:
-`ifdef NEEDED
-    assign VGA_R   = { vga_red_4b,   4'd0 };
-    assign VGA_G   = { vga_green_4b, 4'd0 };
-    assign VGA_B   = { vga_blue_4b,  4'd0 };
-
-    // assign VGA_BLANK = 1'b1;
-    // assign VGA_SYNC  = 0;
-
-    // Divide VGA DAC clock from clk_mhz to vga_clock
-    localparam CLK_DIV = $clog2 (clk_mhz / vga_clock) - 1;
-
-    logic [CLK_DIV:0] clk_en_cnt;
-    logic clk_en;
-
-    always_ff @ (posedge clk or posedge rst)
-    begin
-        if (rst)
-        begin
-            clk_en_cnt <= 'b0;
-            clk_en     <= 'b0;
-        end
-        else
-        begin
-            if (clk_en_cnt == (clk_mhz / vga_clock) - 1)
-            begin
-                clk_en_cnt <= 'b0;
-                clk_en     <= 'b1;
-            end
-            else
-            begin
-                clk_en_cnt <= clk_en_cnt + 1;
-                clk_en     <= 'b0;
-            end
-        end
-    end
-
-    assign VGA_CLK = clk_en;
- `endif
 
     //------------------------------------------------------------------------
     wire [$left (abcdefgh):0] hgfedcba;
